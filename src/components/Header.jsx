@@ -1,54 +1,68 @@
-import { useState } from "react";
 import logo from "../assets/trueID-logo.svg";
+import { useNavigate } from "react-router-dom";
+import { NavLink } from "react-router-dom";
+
+const navLinks = [
+  { label: "about us", key: "about", path: "/info" },
+  { label: "FAQ", key: "faq", path: null },
+  { label: "register", key: "register", path: null },
+];
 
 const Header = () => {
-  const [hovered, setHovered] = useState(null);
-
-  const navLinks = [
-    { label: "about us", key: "about" },
-    { label: "FAQ", key: "faq" },
-    { label: "register", key: "register" },
-  ];
+  const navigate = useNavigate();
 
   return (
-    <header className="w-full bg-[#222222] flex justify-center items-center h-[180px]">
-      <div className="w-full max-w-[1200px] h-[60px] flex justify-between items-center px-4">
-        <div className="w-[149px] cursor-pointer">
+    <header className="w-full bg-[#222222] flex justify-center items-center 
+      h-[80px] md:h-[120px] lg:h-[180px]">
+
+      <div className="w-full max-w-[1200px] flex justify-between items-center 
+        px-4 md:px-8 lg:px-4">
+
+        {/* Логотип */}
+        <div
+          className="cursor-pointer w-[90px] md:w-[120px] lg:w-[149px]"
+          onClick={() => navigate("/")}
+        >
           <img src={logo} alt="TrueID" className="w-full h-auto" />
         </div>
 
-        <nav className="flex items-center gap-8 h-[43px]">
-          {navLinks.map(({ label, key }) => (
-            <a
+        {/* Навигация */}
+        <nav className="hidden md:flex items-center gap-4 lg:gap-8">
+          {navLinks.map(({ label, key, path }) => (
+            <NavLink
               key={key}
-              href="#"
-              onMouseEnter={() => setHovered(key)}
-              onMouseLeave={() => setHovered(null)}
-              className="inline-flex items-center justify-center no-underline font-medium uppercase text-sm tracking-wide transition-colors duration-300"
-              style={{
-                color: hovered === key ? "#F1FF7C" : "#FFFFFF",
-                textDecoration: "none",
-              }}
+              to={path || "#"}
+              onClick={(e) => { if (!path) e.preventDefault(); }}
+              className={({ isActive }) =>
+                `inline-flex items-center justify-center font-medium uppercase 
+                text-xs lg:text-sm tracking-wide no-underline transition-colors duration-300
+                ${isActive && path ? "text-[#F1FF7C]" : "text-white hover:text-[#F1FF7C]"}`
+              }
             >
               {label}
-            </a>
+            </NavLink>
           ))}
 
           <a
             href="#"
-            onMouseEnter={() => setHovered("login")}
-            onMouseLeave={() => setHovered(null)}
-            className="inline-flex items-center justify-center w-[99px] h-[44px] rounded-[24px] uppercase text-sm font-semibold tracking-wide transition-all duration-300"
-            style={{
-              border: "1.5px solid #F1FF7C",
-              color: hovered === "login" ? "#222222" : "#F1FF7C",
-              backgroundColor: hovered === "login" ? "#F1FF7C" : "transparent",
-              textDecoration: "none",
-            }}
+            className="inline-flex items-center justify-center 
+              w-[80px] h-[36px] lg:w-[99px] lg:h-[44px] 
+              rounded-[24px] uppercase text-xs lg:text-sm font-semibold 
+              tracking-wide no-underline border-[1.5px] border-[#F1FF7C] 
+              text-[#F1FF7C] bg-transparent hover:bg-[#F1FF7C] 
+              hover:text-[#222222] transition-all duration-300"
           >
             login
           </a>
         </nav>
+
+        {/* Бургер-меню */}
+        <button className="flex md:hidden flex-col gap-[5px] cursor-pointer">
+          <span className="w-[24px] h-[2px] bg-white block"></span>
+          <span className="w-[24px] h-[2px] bg-white block"></span>
+          <span className="w-[24px] h-[2px] bg-white block"></span>
+        </button>
+
       </div>
     </header>
   );
